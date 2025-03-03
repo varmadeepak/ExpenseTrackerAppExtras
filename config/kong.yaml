@@ -1,16 +1,40 @@
+#_format_version: "2.1"
+#
+#services:
+#  - name: auth-service
+#    url: http://172.23.0.6:9898
+#    routes:
+#      - name: sign-up
+#        paths:
+#          - /auth/v1/signup
+#
+#  - name: user-service
+#    url: http://172.23.0.5:9797
+#    routes:
+#      - name: get-user
+#        paths:
+#          - /user/v1/getUser
 _format_version: "2.1"
 
 services:
-  - name: auth-service
-    url: http://172.23.0.6:9898
+  - name: expense-service
+    url: http://host.docker.internal:9595
     routes:
-      - name: sign-up
+      - name: expense-route
         paths:
-          - /auth/v1/signup
+          - /expense/v1
+        strip_path: false
+        preserve_host: false
+    plugins:
+      - name: custom-auth
+        config:
+          auth_service_url: "http://host.docker.internal:9898/auth/v1/ping"
 
-  - name: user-service
-    url: http://172.23.0.5:9797
+  - name: auth-service
+    url: http://host.docker.internal:9898
     routes:
-      - name: get-user
+      - name: auth-route
         paths:
-          - /user/v1/getUser
+          - /auth/v1
+        strip_path: false
+        preserve_host: false
